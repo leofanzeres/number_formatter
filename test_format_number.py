@@ -1,15 +1,19 @@
 import pytest
-from format_number import format_number
-
-number_format_dict = {'mil veintiuno':1021}
+from numberformatter import NumberFormatter
 
 @pytest.fixture
-def number_text():
-    return 'mil veintiuno'
+def formatter():
+    return NumberFormatter('numbers_dictionary.csv')
 
-#def test_split_text():
-    
+@pytest.fixture
+def number():
+    return 'uno'
 
-def test_format_number(number_text):
-    assert format_number(number_text) == number_format_dict.get(number_text)
+@pytest.fixture
+def numbers_dict_csv(formatter):
+    return 'numbers_dictionary.csv'
+
+def test_format_number_1_digit(formatter, number):
+    assert formatter.format_number(number) == formatter.load_dictionary().get(number)
+
 
