@@ -11,7 +11,7 @@ class NumberFormatter:
             numbers_dict[row[1]] = row[0]
         return numbers_dict
 
-    def format_text(self, text):
+    def format_numbers(self, text):
         with open(text) as f:
             lines = f.readlines()
         formatted_lines = []
