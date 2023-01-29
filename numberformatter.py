@@ -48,15 +48,13 @@ class NumberFormatter:
 
     def format_up_to_3_digits(self, number_split):
         numbers = []
+        for number in number_split:
+            numbers.append(self.numbers_dict.get(number))
         if len(number_split) == 1:
-            formatted_number = self.numbers_dict.get(number_split[0])
-        elif len(number_split) == 2:
-            for number in number_split:
-                numbers.append(self.numbers_dict.get(number))
+            formatted_number = numbers[0]
+        elif len(number_split) == 2:       
             formatted_number = numbers[0][:-len(numbers[1])] + numbers[1]
         elif len(number_split) == 3:
-            for number in number_split:
-                numbers.append(self.numbers_dict.get(number))
             formatted_number = numbers[0][:-len(numbers[1])] + numbers[1][:-len(numbers[2])] + numbers[2]
         else:
             print('Number not supported.')
@@ -65,19 +63,15 @@ class NumberFormatter:
     
     def format_more_than_3_digits(self, number_split):
         numbers = []
+        for number in number_split:
+            numbers.append(self.numbers_dict.get(number))
         if len(number_split) == 1:
-            formatted_number = self.numbers_dict.get(number_split[0])
+            formatted_number = numbers[0]
         elif len(number_split) == 2:
-            for number in number_split:
-                numbers.append(self.numbers_dict.get(number))
             formatted_number = numbers[0] + numbers[1][1:]
         elif len(number_split) == 3:
-            for number in number_split:
-                numbers.append(self.numbers_dict.get(number))
             formatted_number = numbers[0][:-len(numbers[1])] + numbers[1] + numbers[2][1:]
         elif len(number_split) == 4:
-            for number in number_split:
-                numbers.append(self.numbers_dict.get(number))
             formatted_number = numbers[0][:-len(numbers[1])] + numbers[1][:-len(numbers[2])]+ numbers[2] + numbers[3][1:]
         else:
             print('Number not supported.')
