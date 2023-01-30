@@ -1,4 +1,5 @@
 import csv
+import fnmatch
 
 class NumberFormatter:
     def __init__(self, numbers_dict_csv):
@@ -20,30 +21,58 @@ class NumberFormatter:
         return formatted_lines
 
     def format_number(self, number):
-        mil_pos = -1
         number_split = number.split(' ')
         while 'y' in number_split: number_split.remove('y')
 
         if len(number_split) == 0:
             print('Empty string provided.')
             return None
-        if 'mil' in number_split:
-            mil_pos = len(number_split) - 1 - number_split[::-1].index('mil')
-            if len(number_split[mil_pos+1:]) > 0:
-                cent = self.format_up_to_3_digits(number_split[mil_pos+1:])
+        million_pos = [i for i, s in enumerate(number_split) if 'illón' in s]
+        millions_pos = [i for i, s in enumerate(number_split) if 'illones' in s]
+        million_pos = million_pos + millions_pos
+        million_pos.sort()
+        if len(million_pos) > 0:    
+            if len(number_split[million_pos[-1]+1:]) > 0:
+                if 'mil' in number_split[million_pos[-1]+1:]:
+                    after_million = self.split_thousands(number_split[million_pos[-1]+1:])
+                else:
+                    after_million = self.format_up_to_3_digits(number_split[million_pos[-1]+1:])
             else:
-                cent = ''
-            if len(number_split[:mil_pos+1]) > 0:
-                mil = self.format_more_than_3_digits(number_split[:mil_pos+1])
+                after_million = ''
+            if len(number_split[:million_pos[-1]+1]) > 0:
+                if 'mil' in number_split[:million_pos[-1]+1]:
+                    millions = self.split_thousands(number_split[:million_pos[-1]]) # Get thousands only, without millions
+                    millions += self.format_more_than_3_digits(number_split[million_pos[-1]:million_pos[-1]+1])[1:] # Add millions
+                else:
+                    millions = self.format_more_than_3_digits(number_split[:million_pos[-1]+1])
             else:
-                mil = ''
-            if len(cent) > 0:
-                formatted_number = mil[:-len(cent)] + cent
+                millions = ''
+            if len(after_million) > 0:
+                formatted_number = millions[:-len(after_million)] + after_million
             else:
-                formatted_number = mil
+                formatted_number = millions
+                
+        elif 'mil' in number_split:
+            formatted_number = self.split_thousands(number_split)
         else:
             formatted_number = self.format_up_to_3_digits(number_split)
             
+        return formatted_number
+    
+    def split_thousands(self,number_split):
+        thousand_pos = len(number_split) - 1 - number_split[::-1].index('mil') # get positin of last ocurrence of 'mil'
+        if len(number_split[thousand_pos+1:]) > 0:
+            hundreds = self.format_up_to_3_digits(number_split[thousand_pos+1:])
+        else:
+            hundreds = ''
+        if len(number_split[:thousand_pos+1]) > 0:
+            thousands = self.format_more_than_3_digits(number_split[:thousand_pos+1])
+        else:
+            thousands = ''
+        if len(hundreds) > 0:
+            formatted_number = thousands[:-len(hundreds)] + hundreds
+        else:
+            formatted_number = thousands
         return formatted_number
 
     def format_up_to_3_digits(self, number_split):
@@ -70,8 +99,16 @@ class NumberFormatter:
         elif len(number_split) == 2:
             formatted_number = numbers[0] + numbers[1][1:]
         elif len(number_split) == 3:
-            formatted_number = numbers[0][:-len(numbers[1])] + numbers[1] + numbers[2][1:]
+            if 'millones' in number_split and 'mil' in number_split:
+                formatted_number = numbers[0] + numbers[1][1:] + numbers[2][1:]
+            else:
+                formatted_number = numbers[0][:-len(numbers[1])] + numbers[1] + numbers[2][1:]
         elif len(number_split) == 4:
+            if 'millones' in number_split and 'mil' in number_split:
+                formatted_number = numbers[0][:-len(numbers[1])] + numbers[1] + numbers[2][1:] + numbers[3][1:]
+            else:
+                formatted_number = numbers[0][:-len(numbers[1])] + numbers[1][:-len(numbers[2])]+ numbers[2] + numbers[3][1:]
+        elif len(number_split) == 7:
             formatted_number = numbers[0][:-len(numbers[1])] + numbers[1][:-len(numbers[2])]+ numbers[2] + numbers[3][1:]
         else:
             print('Number not supported.')

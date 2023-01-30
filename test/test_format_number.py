@@ -57,8 +57,21 @@ def test_format_numbers_5_digits(formatter):
 
 def test_format_numbers_6_digits(formatter):
     numbers = ('doscientos mil','trescientos mil y uno','cuatrocientos mil ochenta y uno','cuatrocientos treinta y tres mil doscientos',
-    'quinientos treinta y un mil cuatrocientos sesenta y cinco')
-    numbers_target = ('200000','300001','400081','433200','531465')
+    'quinientos treinta y un mil cuatrocientos sesenta y cinco','seiscientos veintidós mil treinta y tres')
+    numbers_target = ('200000','300001','400081','433200','531465','622033')
+    formatted_numbers = formatter.format_numbers(numbers)
+    format_assert(formatted_numbers,numbers_target)
+
+def test_format_numbers_7_to_9_digits(formatter):
+    numbers = ('un millón','tres millones', 'tres millones cuatrocientos mil','cuatrocientos veintitrés millones cuarenta mil trescientos treinta y uno')
+    numbers_target = ('1000000','3000000','3400000','423040331')
+    formatted_numbers = formatter.format_numbers(numbers)
+    format_assert(formatted_numbers,numbers_target)
+
+def test_format_numbers_10_to_12_digits(formatter):
+    numbers = ('ocho mil millones','treinta y dos mil millones','treinta y tres mil doscientos cuarenta y cinco millones',
+    'cuarenta y un mil veintitrés millones ciento veintidós mil treinta y tres','doscientos treinta y tres mil cincuenta y cuatro millones cuatrocientos cuarenta y cinco mil seiscientos siete')
+    numbers_target = ('8000000000','32000000000','33245000000','41023122033','233054445607')
     formatted_numbers = formatter.format_numbers(numbers)
     format_assert(formatted_numbers,numbers_target)
 
