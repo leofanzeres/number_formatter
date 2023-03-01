@@ -3,7 +3,8 @@ from numberformatter import NumberFormatter
 
 @pytest.fixture
 def formatter():
-    return NumberFormatter('numbers_dictionary.csv')
+    formatter = NumberFormatter()
+    return formatter
 
 def test_format_number_1_digit(formatter):
     number = 'uno'

@@ -2,8 +2,8 @@ import csv
 import fnmatch
 
 class NumberFormatter:
-    def __init__(self, numbers_dict_csv):
-        self.numbers_dict_csv = numbers_dict_csv
+    def __init__(self):
+        self.numbers_dict_csv = 'numbers_dictionary.csv'
         self.numbers_dict = self.load_dictionary()
 
     def load_dictionary(self):
